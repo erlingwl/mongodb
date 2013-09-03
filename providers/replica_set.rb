@@ -180,7 +180,7 @@ action :create do
       Chef::Log.info "Updating replica set configuration..."
 
       begin
-        connection['admin'].command({'replSetReconfig' => new_config})
+        connection['admin'].command({'replSetReconfig' => new_config, 'force' => node['mongodb']['mongod']['force_reconfig']})
       rescue ::Mongo::ConnectionFailure => ex # Reconfiguring closes all connections - this is normal
         Chef::Log.info "Connection closed, reconnecting..."
         connection = ::Mongo::MongoReplicaSetClient.new(seed_list, :name => replica_set_name, :connect_timeout => 10, :read => :primary_preferred)

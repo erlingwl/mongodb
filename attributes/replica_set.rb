@@ -22,6 +22,7 @@ default['mongodb']['mongod']['bind_ip'] = '' # Leave blank to bind to all local 
 
 # Replica set node settings
 default['mongodb']['mongod']['replica_set'] = 'my_set'
+default['mongodb']['mongod']['force_reconfig'] = false
 
 default['mongodb']['mongod']['arbiter_only'] = false
 default['mongodb']['mongod']['build_indexes'] = true
