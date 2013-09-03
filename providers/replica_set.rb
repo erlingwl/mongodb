@@ -57,9 +57,7 @@ action :create do
       connection['admin'].command({'replSetGetStatus' => 1})
       replica_set_initiated = true
     rescue ::Mongo::OperationFailure => ex
-      if ex.message.include? 'LOADINGCONFIG' # could be old wrong config
-        replica_set_initiated = true
-      elsif !ex.message.include? 'run rs.initiate'
+      unless (ex.message.include? 'run rs.initiate') || (ex.message.include? 'LOADINGCONFIG')
         raise # re-raise the error - we want to know about it
       end
     end
