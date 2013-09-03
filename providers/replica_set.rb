@@ -57,7 +57,15 @@ action :create do
       connection['admin'].command({'replSetGetStatus' => 1})
       replica_set_initiated = true
     rescue ::Mongo::OperationFailure => ex
-      unless (ex.message.include? 'run rs.initiate') || (ex.message.include? 'LOADINGCONFIG')
+      if ex.message.include? 'LOADINGCONFIG' # could be old wrong config
+        current_config = connection['local']['system']['replset'].find_one({"_id" => replica_set_name})
+        new_config = ::BSON::OrderedHash.new
+        new_config['_id'] = replica_set_name
+        new_config['version'] = current_config['version'] + 1
+        new_config['members'] = members.collect{|member| generate_member_config(member)}.sort_by!{|n| n['_id']}
+        connection['admin'].command({'replSetReconfig' => new_config, 'force' => node['mongodb']['mongod']['force_reconfig']})
+        replica_set_initiated = true
+      unless !ex.message.include? 'run rs.initiate'
         raise # re-raise the error - we want to know about it
       end
     end
