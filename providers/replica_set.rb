@@ -63,7 +63,8 @@ action :create do
         Chef::Log.info("current_config: #{current_config.inspect}")
         new_config = ::BSON::OrderedHash.new
         new_config['_id'] = replica_set_name
-        new_config['version'] = current_config['version'] + 1
+        current_version = current_config ? current_config['version'] : 0
+        new_config['version'] = current_version + 1
         new_config['members'] = members.collect{|member| generate_member_config(member)}.sort_by!{|n| n['_id']}
         Chef::Log.info("new_config: #{new_config.inspect}")
         result = connection['admin'].command({'replSetReconfig' => new_config, 'force' => node['mongodb']['mongod']['force_reconfig']})
