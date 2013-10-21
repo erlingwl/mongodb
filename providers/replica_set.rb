@@ -60,15 +60,15 @@ action :create do
       if ex.message.include? 'LOADINGCONFIG' # could be old wrong config
         Chef::Log.warn("Overwriting replica_set config, seems to be an old config")
         current_config = connection['local']['system']['replset'].find_one({"_id" => replica_set_name})
-        Chef::Log.info("current_config: #{current_config.inspect}")
+        Chef::Log.warn("current_config: #{current_config.inspect}")
         new_config = ::BSON::OrderedHash.new
         new_config['_id'] = replica_set_name
         current_version = current_config ? current_config['version'] : 0
         new_config['version'] = current_version + 1
         new_config['members'] = members.collect{|member| generate_member_config(member)}.sort_by!{|n| n['_id']}
-        Chef::Log.info("new_config: #{new_config.inspect}")
+        Chef::Log.warn("new_config: #{new_config.inspect}")
         result = connection['admin'].command({'replSetReconfig' => new_config, 'force' => node['mongodb']['mongod']['force_reconfig']})
-        Chef::Log.info("result: #{result}")
+        Chef::Log.warn("result: #{result}")
         wait_for_successful_status(connection)
         replica_set_initiated = true
       elsif !ex.message.include? 'run rs.initiate'
