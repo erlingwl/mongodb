@@ -69,6 +69,8 @@ action :create do
         Chef::Log.warn("new_config: #{new_config.inspect}")
         result = connection['admin'].command({'replSetReconfig' => new_config, 'force' => node['mongodb']['mongod']['force_reconfig']})
         Chef::Log.warn("result: #{result}")
+        result = connection['admin'].command({'replSetReconfig' => new_config, 'force' => node['mongodb']['mongod']['force_reconfig']})
+        Chef::Log.warn("result: #{result}")
         wait_for_successful_status(connection)
         replica_set_initiated = true
       elsif !ex.message.include? 'run rs.initiate'
