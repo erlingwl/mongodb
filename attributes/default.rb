@@ -49,7 +49,6 @@ default['mongodb']['journal_commit_interval'] = 100 # ms
 default['mongodb']['syslog'] = true # Having this ON means all log entries will go to syslog rather than to the log file (version >2.1)
 default['mongodb']['log_append'] = true
 default['mongodb']['log_cpu'] = false
-default['mongodb']['log_verbose'] = false
 default['mongodb']['log_quiet'] = true
 
 # Authentication

@@ -68,7 +68,6 @@ which are deployed on that node.
     default['mongodb']['syslog'] # Whether to send all log entries to syslog (defaults to True)
     default['mongodb']['log_append'] # Just leave this on true (defaults to True)
     default['mongodb']['log_cpu'] # Tell mongodb to periodically report CPU use in the logs (defaults to False)
-    default['mongodb']['log_verbose'] # Whether to enable verbose logging (defaults to False)
     default['mongodb']['log_quiet'] # Reduce logging output (defaults to True)
 
     default['mongodb']['auth_enabled'] # Whether authentication is enabled (defaults to False)
